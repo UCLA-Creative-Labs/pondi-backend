@@ -10,7 +10,7 @@ class Profile(models.Model):
     friends = models.ManyToManyField("self", symmetrical = True)
 
     def __str__(self):
-        return self.name + ' - ' + self.username
+        return self.user.username
 
 
 @receiver(post_save, sender=User)
