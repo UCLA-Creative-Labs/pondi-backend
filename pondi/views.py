@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from pondi.models import User, Post, Prompt
+from pondi.models import Profile, Post, Prompt
 
 userName = 1 #use api given userName
 userPosts = Post.objects.filter(profile__user__username = userName)

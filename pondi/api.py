@@ -50,3 +50,15 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(profile =self.request.profile)
+
+class FriendPostsViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = PostSerializer
+
+
+    def get_queryset(self):
+        return (Post.objects.filter(profile__closefriends__user__username = self.request.user.username)
+        | Post.objects.filter(profile__friends__user__username = self.request.user.username).exclude(privacy = 'c'))
+
+    def perform_create(self, serializer):
+        serializer.save(profile =self.request.profile)

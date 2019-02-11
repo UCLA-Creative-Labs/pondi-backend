@@ -1,4 +1,5 @@
 .vscode/
 pondiBackend/__pycache__
 pondi/__pycache__
+pondi/migrations/__pycache__
 pondiBackend/__pycache__
