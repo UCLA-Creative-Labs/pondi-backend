@@ -1,10 +1,11 @@
 from django.conf.urls import include, url
 from rest_framework import routers
 
-from .api import RegistrationAPI, LoginAPI, UserAPI
+from .api import RegistrationAPI, LoginAPI, UserAPI, PostViewSet
 
 
 router = routers.DefaultRouter()
+router.register('pondi', PostViewSet, 'pondi')
 
 urlpatterns = [
     url("^", include(router.urls)),
