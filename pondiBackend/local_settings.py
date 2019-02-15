@@ -1,3 +1,5 @@
+'''
+
 import psycopg2
 DATABASES = {
     'default': {
@@ -9,3 +11,4 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+'''
