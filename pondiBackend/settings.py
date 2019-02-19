@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+
 import dj_database_url
+
+
 
 
 
@@ -28,8 +31,11 @@ SECRET_KEY = '8t1mia3nb&#5f+bi+62-)yx^c4$kcq9ml=udxpptt48+3-f&#5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['ff379468.ngrok.io',
                 '127.0.0.1', 'pondi.herokuapp.com']
+
+
 
 
 # Application definition
@@ -85,6 +91,7 @@ WSGI_APPLICATION = 'pondiBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+
 DATABASES={}
 DATABASES['default'] = dj_database_url.config()
 # Password validation
@@ -124,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -131,3 +139,5 @@ try:
     from local_settings import *
 except ImportError as e:
     pass
+
+
