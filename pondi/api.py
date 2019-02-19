@@ -1,11 +1,10 @@
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
-from .serializers import (CreateUserSerializer, UserSerializer, LoginUserSerializer, PostSerializer)
+from .serializers import (CreateUserSerializer, ProfileSerializer, UserSerializer, LoginUserSerializer, PostSerializer)
 from .models import Post
 
 from knox.models import AuthToken
 
-from .serializers import CreateUserSerializer, UserSerializer
 
 class RegistrationAPI(generics.GenericAPIView):
     serializer_class = CreateUserSerializer
@@ -38,6 +37,13 @@ class UserAPI(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+class ProfileAPI(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        return self.request.user.profile
 
 #The API is pretty staight-forward, we validate the user input and create an account if the validation passes. In the response, we return the user object in serialized format and an authentication token which will be used by the application to perform user-specific api calls.
 class PostViewSet(viewsets.ModelViewSet):

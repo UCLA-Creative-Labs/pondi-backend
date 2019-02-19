@@ -5,9 +5,15 @@ from django.db.models.signals import post_save
 
 
 class Profile(models.Model):
+    first_name = models.CharField(max_length=50, null = True, blank = True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
+    color = models.CharField(max_length=50, default="olive")
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     closefriends = models.ManyToManyField("self", symmetrical = False)
     friends = models.ManyToManyField("self", symmetrical = True)
+    color = models.CharField(max_length = 50, default = "olive")
+    animal = models.CharField(max_length=50, default="porcupine")
+
 
     def __str__(self):
         return self.user.username
@@ -37,4 +43,4 @@ class Post(models.Model):
     theme = models.CharField(max_length = 500)
 
     def __str__(self):
-        return self.user.name + ' - ' + self.body
+        return self.profile.user.username + ' - ' + self.body

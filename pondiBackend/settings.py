@@ -32,7 +32,7 @@ SECRET_KEY = '8t1mia3nb&#5f+bi+62-)yx^c4$kcq9ml=udxpptt48+3-f&#5'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['ff379468.ngrok.io',
+ALLOWED_HOSTS = ['ff379468.ngrok.io', 'localhost',
                 '127.0.0.1', 'pondi.herokuapp.com']
 
 
@@ -91,9 +91,21 @@ WSGI_APPLICATION = 'pondiBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+import psycopg2
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pondi',
+        'USER': 'admin',
+        'PASSWORD': 'pondi2019!',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+'''
 
 DATABASES={}
-DATABASES['default'] = dj_database_url.config()
+DATABASES['default'] = dj_database_url.config() '''
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
