@@ -40,3 +40,4 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('prompt', 'body', 'timestamp', 'profile', 'privacy', 'theme')
+
