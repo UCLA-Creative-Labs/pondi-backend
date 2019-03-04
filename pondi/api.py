@@ -1,7 +1,8 @@
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
-from .serializers import (CreateUserSerializer, ProfileSerializer, UserSerializer, LoginUserSerializer, PostSerializer, AcceptFriendSerializer)
+from .serializers import (CreateUserSerializer, ProfileSerializer, UserSerializer, LoginUserSerializer, PostSerializer,)
 from .models import Post, Profile, User
+import json
 from rest_framework.views import APIView
 
 from knox.models import AuthToken
@@ -15,7 +16,7 @@ class RegistrationAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response({
-            "user": ProfileSerializer(self.request.user.profile, context=self.get_serializer_context()).data,
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)
         })
 
@@ -28,7 +29,7 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         return Response({
-            "user": ProfileSerializer(self.request.user.profile, context=self.get_serializer_context()).data,
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)
         })
 
@@ -79,8 +80,27 @@ class UpdateProfileAPI(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user.profile
-'''
+
 class AcceptFriendRequest(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        return self.request.user.profile
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        tempData = request.body
+        serializer = self.get_serializer(instance,data=request.data, partial=partial)
+        myDict = json.loads(tempData)
+        name2 = myDict["friendname"]
+        pk = (User.objects.get(username__startswith = name2)).id
+        instance.friends.add(pk)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+class AcceptCloseFriendRequest(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ProfileSerializer
 
@@ -89,52 +109,38 @@ class AcceptFriendRequest(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        myDict = dict(request.data) #request.data is a queryDict --> dict
-        tempList = myDict.get("pendingfriends", "nope") #from myDict get List value from myDict
-        tempFriend = tempList[0] #get first value which is the added friend
-        tempID = Profile.objects.filter(profile_user_username=tempFriend)
-        instance.friends.add(tempID)
+        tempData = request.body
+        serializer = self.get_serializer(instance,data=request.data, partial=partial)
+        myDict = json.loads(tempData)
+        name2 = myDict["friendname"]
+        pk = (User.objects.get(username__startswith = name2)).id
+        instance.closefriends.add(pk)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
 
-'''
-class AcceptFriend(generics.UpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = AcceptFriendSerializer
-
-    def get_object(self):
-        return self.request.user.profile
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        tempList=request.data
-        tempID=tempList.get("pendingfriends")
-        instance.friends.add(tempID)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
-
-class AcceptFriendRequest(generics.UpdateAPIView):
+class SendFriendRequest(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ProfileSerializer
+
     def get_object(self):
         return self.request.user.profile
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+    def post(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        #tempFriend = request.GET.get("blue", 'poop')
-        myDict = dict(request.data) #request.data is a queryDict --> dict
-        tempList = myDict.get("pendingfriends", "nope") #from myDict get List value from myDict
-        tempFriend = tempList[0] #get first value which is the added friend
-        instance.friends.add(tempFriend)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+        tempData = request.body
+        requestDict = json.loads(tempData) #Holds name of person client is requesting
+        friendname = requestDict["friendname"]
+        pk = (User.objects.get(username__startswith = instance.user.username)).id #holds pk value of person making request
+        acceptor = (Profile.objects.get(user__username__startswith = friendname)) #acceptor holds Profile object of acceptor
+        acceptor.pendingfriends.add(pk)
+        acceptor.save()
+        testDict = {'1':friendname}
+        returnDict = json.dumps(testDict)
+        return Response(returnDict)
+
+
+
+
 
 
 

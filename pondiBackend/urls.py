@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 
-from pondi import endpoints
+from pondi import endpoints, views
 
 urlpatterns = [
     url(r'^api/', include(endpoints)),
     url(r'^api/auth/', include('knox.urls')),
     path('admin/', admin.site.urls),
+    path('sendrequest/', views.send_request)
 
 
 

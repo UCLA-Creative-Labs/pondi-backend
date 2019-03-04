@@ -41,10 +41,4 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('prompt', 'body', 'timestamp', 'profile', 'privacy', 'theme')
 
-class AcceptFriendSerializer(serializers.ModelSerializer):
-    pendingfriends=serializers.PrimaryKeyRelatedField(many=True, queryset=Profile.objects.all())
-
-    class Meta:
-        model = Profile
-        fields = ('pendingfriends')
 
