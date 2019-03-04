@@ -9,14 +9,18 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50, null=True, blank=True)
     color = models.CharField(max_length=50, default="olive")
     user = models.OneToOneField(User, on_delete = models.CASCADE)
-    closefriends = models.ManyToManyField("self", symmetrical = False)
+    closefriends = models.ManyToManyField("self", related_name='close' ,symmetrical = False)
     friends = models.ManyToManyField("self", symmetrical = True)
+    pendingfriends = models.ManyToManyField("self", symmetrical=False)
     color = models.CharField(max_length = 50, default = "olive")
     animal = models.CharField(max_length=50, default="porcupine")
 
 
+
     def __str__(self):
         return self.user.username
+
+
 
 
 @receiver(post_save, sender=User)

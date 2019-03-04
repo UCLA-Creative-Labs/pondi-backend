@@ -1,7 +1,7 @@
 from django.conf.urls import include, url
 from rest_framework import routers
 
-from .api import RegistrationAPI, LoginAPI, UserAPI, PostViewSet, ProfileAPI, UpdateProfileAPI
+from .api import RegistrationAPI, LoginAPI, UserAPI, PostViewSet, ProfileAPI, UpdateProfileAPI, AcceptFriendRequest, AcceptFriend
 
 
 router = routers.DefaultRouter()
@@ -14,6 +14,8 @@ urlpatterns = [
     url("^auth/user/$", UserAPI.as_view()),
     url("^auth/profile/$", ProfileAPI.as_view()),
     url("^auth/update/$", UpdateProfileAPI.as_view()),
+    url("^auth/acceptrequest/$", AcceptFriendRequest.as_view()),
+    url("^auth/accept/$", AcceptFriend.as_view()),
 
 
 ]

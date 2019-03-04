@@ -34,10 +34,17 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
     class Meta:
         model = Profile
-        fields = ('user', 'first_name', 'last_name', 'animal', 'color', 'friends', 'closefriends')
+        fields = ('user', 'first_name', 'last_name', 'animal', 'color', 'friends', 'closefriends', 'pendingfriends')
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('prompt', 'body', 'timestamp', 'profile', 'privacy', 'theme')
+
+class AcceptFriendSerializer(serializers.ModelSerializer):
+    pendingfriends=serializers.PrimaryKeyRelatedField(many=True, queryset=Profile.objects.all())
+
+    class Meta:
+        model = Profile
+        fields = ('pendingfriends')
 
