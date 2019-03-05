@@ -43,6 +43,7 @@ ALLOWED_HOSTS = ['ff379468.ngrok.io', 'localhost',
 INSTALLED_APPS = [
     'rest_framework',
     'knox',
+    'corsheaders',
     'pondi.apps.PondiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,8 +58,9 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,6 +68,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL=True
 
 ROOT_URLCONF = 'pondiBackend.urls'
 
@@ -92,20 +96,13 @@ WSGI_APPLICATION = 'pondiBackend.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 import psycopg2
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pondi',
-        'USER': 'admin',
-        'PASSWORD': 'pondi2019!',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-'''
 
-DATABASES={}
-DATABASES['default'] = dj_database_url.config() '''
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': 'mydatabase',
+   }
+}
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -141,11 +138,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 try:
     from local_settings import *
