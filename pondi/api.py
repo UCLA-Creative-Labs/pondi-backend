@@ -62,6 +62,8 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(profile =self.request.profile)
 
+
+
 class FriendPostsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = PostSerializer
@@ -138,6 +140,22 @@ class SendFriendRequest(APIView):
         returnDict = json.dumps(testDict)
         return Response(returnDict)
 
+class SearchFriend(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = ProfileSerializer
+    def get(self, request, *args, **kwargs):
+        tempData = request.body
+        requestDict = json.loads(tempData) #Holds name of person client is requesting
+        friendname = requestDict["friendname"]
+        try:
+            friendObject = (Profile.objects.get(user__username__startswith = friendname))
+        except Profile.DoesNotExist:
+            testDict = {'1': "Username does not match any user"}
+            returnDict = json.dumps(testDict)
+            return Response(returnDict)
+        return Response({
+            "friendObject": ProfileSerializer(friendObject).data
+        })
 
 
 
