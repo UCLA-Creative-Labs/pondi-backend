@@ -155,13 +155,13 @@ class SearchFriend(APIView):
         requestDict = json.loads(tempData) #Holds name of person client is requesting
         friendname = requestDict["friendname"]
         try:
-            friendObject = (Profile.objects.get(user__username__startswith = friendname))
+            friendObject = (User.objects.get(username__startswith = friendname))
         except Profile.DoesNotExist:
             testDict = {'1': "Username does not match any user"}
             returnDict = json.dumps(testDict)
             return Response(returnDict)
         return Response({
-            "friendObject": ProfileSerializer(friendObject).data
+            "friendObject": UserSerializer(friendObject).data
         })
 
 
