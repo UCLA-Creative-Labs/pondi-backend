@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
+from .models import Post, Prompt, Profile
+from .serializers import PostCreateSerializer
 
 from pondi.models import Profile, Post, Prompt
 

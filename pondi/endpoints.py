@@ -1,11 +1,13 @@
 from django.conf.urls import include, url
 from rest_framework import routers
 
-from .api import RegistrationAPI, LoginAPI, UserAPI, PostViewSet, ProfileAPI, UpdateProfileAPI, AcceptFriendRequest, AcceptFriend
+from .api import RegistrationAPI, LoginAPI, UserAPI, ProfileAPI, UpdateProfileAPI, AcceptFriendRequest, AcceptFriend, PromptViewSet
 
 
 router = routers.DefaultRouter()
-router.register('pondi', PostViewSet, 'pondi')
+#router.register('pondi', PostViewSet, 'pondi')
+
+router.register('prompts', PromptViewSet)
 
 urlpatterns = [
     url("^", include(router.urls)),
@@ -16,6 +18,7 @@ urlpatterns = [
     url("^auth/update/$", UpdateProfileAPI.as_view()),
     url("^auth/acceptrequest/$", AcceptFriendRequest.as_view()),
     url("^auth/accept/$", AcceptFriend.as_view()),
+    url("^prompts/$", include(router.urls)),
 
 
 ]

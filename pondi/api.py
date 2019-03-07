@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
-from .serializers import (CreateUserSerializer, ProfileSerializer, UserSerializer, LoginUserSerializer, PostSerializer, AcceptFriendSerializer)
-from .models import Post, Profile, User
+from .serializers import (CreateUserSerializer, ProfileSerializer, UserSerializer, LoginUserSerializer, PostSerializer, PromptSerializer, AcceptFriendSerializer)
+from .models import Post, Profile, User, Prompt
 from rest_framework.views import APIView
 
 from knox.models import AuthToken
@@ -47,7 +47,11 @@ class ProfileAPI(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user.profile
 
-
+class PromptViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny, ]
+    serializer_class = PromptSerializer
+    queryset = Prompt.objects.all()
+  
 
 #The API is pretty staight-forward, we validate the user input and create an account if the validation passes. In the response, we return the user object in serialized format and an authentication token which will be used by the application to perform user-specific api calls.
 class PostViewSet(viewsets.ModelViewSet):
@@ -59,7 +63,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return Post.objects.filter(profile__user__username = self.request.user.username)
 
     def perform_create(self, serializer):
-        serializer.save(profile =self.request.profile)
+        serializer.save(profile =self.request.profile, prompt=self.request.prompt)
 
 class FriendPostsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
@@ -72,6 +76,8 @@ class FriendPostsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(profile =self.request.profile)
+    
+
 
 class UpdateProfileAPI(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, ]

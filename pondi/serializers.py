@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import Post, Profile
+from .models import Post, Profile, Prompt
 
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,3 +48,7 @@ class AcceptFriendSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('pendingfriends')
 
+class PromptSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prompt
+        fields = ('__all__')
