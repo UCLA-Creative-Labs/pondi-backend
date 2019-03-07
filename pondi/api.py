@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
 import json
-from .serializers import (CreateUserSerializer, ProfileSerializer, UserSerializer, LoginUserSerializer, PostSerializer, PromptSerializer,)
+from .serializers import (CreateUserSerializer, ProfileSerializer, UserSerializer, LoginUserSerializer, PostSerializer, MyPostSerializer, PromptSerializer,)
 from .models import Post, Profile, User, Prompt
 
 from rest_framework.views import APIView
@@ -49,6 +49,8 @@ class ProfileAPI(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user.profile
 
+
+
 class PromptViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny, ]
     serializer_class = PromptSerializer
@@ -56,16 +58,58 @@ class PromptViewSet(viewsets.ModelViewSet):
   
 
 #The API is pretty staight-forward, we validate the user input and create an account if the validation passes. In the response, we return the user object in serialized format and an authentication token which will be used by the application to perform user-specific api calls.
-class PostViewSet(viewsets.ModelViewSet):
+class ProfilePostViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = PostSerializer
+    serializer_class = MyPostSerializer
+    queryset = (Post.objects.all())
 
 
-    def get_queryset(self):
-        return Post.objects.filter(profile__user__username = self.request.user.username)
+    def retrieve(self, request):
+        posts = (Post.objects.filter(profile__user__pk = self.request.user.id))
+        serializer = MyPostSerializer(posts, many=True)
+        return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        serializer.save(profile =self.request.profile, prompt=self.request.prompt)
+
+class PostUpdate(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = MyPostSerializer
+
+    def put(self, request, pk, format=None):
+        tempData = request.body
+        requestDict = json.loads(tempData) #Holds name of person client is requesting
+        prompt = requestDict["prompt"]
+        post = (Post.objects.filter(profile__user__pk = self.request.user.id).filter(prompt = prompt))
+        serializer = MyPostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+
+
+class FriendProfileViewSet(viewsets.ModelViewSet): #Need to work on this
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = MyPostSerializer
+
+
+    def retrieve(self, request):
+        friendname = request.friendname
+        posts = (Post.objects.filter(profile__user__pk = self.request.user.id))
+        serializer = MyPostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+class OceanPostViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = MyPostSerializer
+
+
+    def retrieve(self, request):
+        tempData = request.body
+        requestDict = json.loads(tempData) #Holds name of person client is requesting
+        friendname = requestDict["friendname"]
+        pk = (User.objects.get(username__startswith = friendname)).id
+        posts = (Post.objects.filter(profile__closefriends__user__pk = pk))
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
 
 
 
@@ -74,12 +118,13 @@ class FriendPostsViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
 
-    def get_queryset(self):
-        return (Post.objects.filter(profile__closefriends__user__username = self.request.user.username)
-        | Post.objects.filter(profile__friends__user__username = self.request.user.username).exclude(privacy = 'c'))
+    def retrieve(self, request):
+        posts = (Post.objects.filter(profile__closefriends__user__pk = self.request.user.id).exclude(privacy= 'p')
+        | Post.objects.filter(profile__friends__user__pk = self.request.user.id).exclude(privacy = 'c').exclude(privacy='p'))
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        serializer.save(profile =self.request.profile)
+
     
 
 

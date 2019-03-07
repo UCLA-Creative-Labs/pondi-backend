@@ -2,7 +2,9 @@ from django.conf.urls import include, url
 from rest_framework import routers
 
 
-from .api import RegistrationAPI, LoginAPI, UserAPI, PostViewSet, ProfileAPI, UpdateProfileAPI, AcceptFriendRequest, AcceptCloseFriendRequest, SendFriendRequest, SearchFriend
+from .api import (RegistrationAPI, LoginAPI, UserAPI, ProfilePostViewSet, ProfileAPI,
+                  UpdateProfileAPI, AcceptFriendRequest, AcceptCloseFriendRequest,
+                  SendFriendRequest, SearchFriend, FriendPostsViewSet, OceanPostViewSet, PostUpdate)
 
 
 
@@ -23,7 +25,11 @@ urlpatterns = [
     url("^auth/acceptrequestclose/$", AcceptCloseFriendRequest.as_view()),
     url("^auth/sendrequest/$", SendFriendRequest.as_view()),
     url("^auth/searchfriend/$", SearchFriend.as_view()),
+    url("^auth/friendposts/$", FriendPostsViewSet.as_view({'get' : 'retrieve'})),
+    url("^auth/myposts/$", ProfilePostViewSet.as_view({'get': 'retrieve', 'post':'create', 'patch': 'update'})),
+    url("^auth/oceanposts/$", OceanPostViewSet.as_view({'get': 'retrieve'})),
     url("^prompts/$", include(router.urls)),
+
 
 
 

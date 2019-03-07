@@ -18,12 +18,14 @@ from django.urls import path, include
 from django.conf.urls import url
 
 from pondi import endpoints, views
+from pondi.api import PostUpdate
 
 urlpatterns = [
     url(r'^api/', include(endpoints)),
     url(r'^api/auth/', include('knox.urls')),
     path('admin/', admin.site.urls),
-    path('sendrequest/', views.send_request)
+    path('sendrequest/', views.send_request),
+    path('api/auth/updateposts/<int:pk>/', PostUpdate.as_view()),
 
 
 

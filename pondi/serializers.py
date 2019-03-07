@@ -39,7 +39,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('prompt', 'body', 'timestamp', 'profile', 'privacy', 'theme')
+        fields = ('prompt', 'body', 'timestamp', 'profile', 'theme')
+
+class MyPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('prompt', 'body', 'timestamp', 'profile', 'theme', 'privacy')
 
 
 class PromptSerializer(serializers.ModelSerializer):
