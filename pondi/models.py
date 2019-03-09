@@ -5,8 +5,6 @@ from django.db.models.signals import post_save
 
 
 class Profile(models.Model):
-    first_name = models.CharField(max_length=50, null = True, blank = True)
-    last_name = models.CharField(max_length=50, null=True, blank=True)
     color = models.CharField(max_length=50, default="olive")
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     closefriends = models.ManyToManyField("self", related_name='close' ,symmetrical = False)
@@ -45,6 +43,7 @@ class Post(models.Model):
     profile = models.ForeignKey(Profile, on_delete = models.CASCADE)
     privacy = models.CharField(max_length = 1)
     theme = models.CharField(max_length = 500)
+
 
     def __str__(self):
         return self.profile.user.username + ' - ' + self.body
