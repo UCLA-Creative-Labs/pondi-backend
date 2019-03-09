@@ -60,30 +60,13 @@ class PromptViewSet(viewsets.ModelViewSet):
 #The API is pretty staight-forward, we validate the user input and create an account if the validation passes. In the response, we return the user object in serialized format and an authentication token which will be used by the application to perform user-specific api calls.
 class ProfilePostViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = MyPostSerializer
     queryset = (Post.objects.all())
-
+    serializer_class = MyPostSerializer
 
     def retrieve(self, request):
         posts = (Post.objects.filter(profile__user__pk = self.request.user.id))
         serializer = MyPostSerializer(posts, many=True)
         return Response(serializer.data)
-
-
-class PostUpdate(APIView):
-    permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = MyPostSerializer
-
-    def put(self, request, pk, format=None):
-        tempData = request.body
-        requestDict = json.loads(tempData) #Holds name of person client is requesting
-        prompt = requestDict["prompt"]
-        post = (Post.objects.filter(profile__user__pk = self.request.user.id).filter(prompt = prompt))
-        serializer = MyPostSerializer(post, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-
 
 
 class FriendProfileViewSet(viewsets.ModelViewSet): #Need to work on this

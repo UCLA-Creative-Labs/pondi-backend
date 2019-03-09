@@ -5,7 +5,8 @@ from django.db.models.signals import post_save
 
 
 class Profile(models.Model):
-    color = models.CharField(max_length=50, default="olive")
+    first_name = models.CharField(max_length=50, null = True, blank = True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     closefriends = models.ManyToManyField("self", related_name='close' ,symmetrical = False)
     friends = models.ManyToManyField("self", symmetrical = True)

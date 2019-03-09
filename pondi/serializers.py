@@ -6,12 +6,14 @@ from .models import Post, Profile, Prompt
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'username', 'password', 'email')
+
+        fields = ('id', 'first_name', 'last_name', 'email', 'username', 'password')
+
         extra_kwargs = {'password':{'write_only':True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(validated_data['username'],
-                                        None,
+                                        validated_data['email'],
                                         validated_data['password'])
         return user
 
@@ -28,7 +30,7 @@ class LoginUserSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username','first_name', 'last_name')
+        fields = ('id', 'username','first_name', 'last_name', 'email')
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
@@ -41,10 +43,15 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('prompt', 'body', 'timestamp', 'profile', 'theme')
 
+    def update(self, instance, validated_data):
+        instance.body = validated_data.get('body', instance.body)
+        instance.save()
+        return instance
+
 class MyPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('prompt', 'body', 'timestamp', 'profile', 'theme', 'privacy')
+        fields = ('id','prompt', 'body', 'timestamp', 'profile', 'theme', 'privacy')
 
 
 class PromptSerializer(serializers.ModelSerializer):
