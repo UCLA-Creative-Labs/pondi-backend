@@ -4,14 +4,14 @@ from rest_framework import routers
 
 from .api import (RegistrationAPI, LoginAPI, UserAPI, ProfilePostViewSet, ProfileAPI,
                   UpdateProfileAPI, AcceptFriendRequest, AcceptCloseFriendRequest,
-                  SendFriendRequest, SearchFriend, FriendPostsViewSet, OceanPostViewSet, PostUpdate, FriendProfileViewSet)
+                  SendFriendRequest, SearchFriend, FriendPostsViewSet, OceanPostViewSet, FriendProfileViewSet)
 
 
 
 
 
 router = routers.DefaultRouter()
-#router.register('pondi', PostViewSet, 'pondi')
+router.register('pondi', ProfilePostViewSet, 'pondi')
 
 
 urlpatterns = [
@@ -26,12 +26,9 @@ urlpatterns = [
     url("^auth/sendrequest/$", SendFriendRequest.as_view()),
     url("^auth/searchfriend/$", SearchFriend.as_view()),
     url("^auth/friendposts/$", FriendPostsViewSet.as_view({'get' : 'retrieve'})),
-    url("^auth/myposts/$", ProfilePostViewSet.as_view({'get': 'retrieve', 'post':'create', 'patch': 'update'})),
+    url("^auth/myposts/$", ProfilePostViewSet.as_view({'get': 'retrieve', 'post':'create'})),
     url("^auth/friendprofile/$", FriendProfileViewSet.as_view({'get': 'retrieve'})),
     url("^auth/oceanposts/$", OceanPostViewSet.as_view({'get': 'retrieve'})),
-    url("^prompts/$", include(router.urls)),
-
-
-
-
+    url("^prompts/", include(router.urls)),
+    
 ]
