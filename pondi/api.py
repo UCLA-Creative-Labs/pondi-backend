@@ -92,9 +92,23 @@ class FriendProfileViewSet(viewsets.ModelViewSet): #Need to work on this
 
 
     def retrieve(self, request):
-        friendname = request.friendname
-        posts = (Post.objects.filter(profile__user__pk = self.request.user.id))
-        serializer = MyPostSerializer(posts, many=True)
+        tempData = request.body
+        requestDict = json.loads(tempData) #Holds name of person client is requesting
+        friendname = requestDict["friendname"]
+        friendObject = Profile.objects.get(user__username__startswith = friendname)
+        #Check if you are in closefriends
+        #friendList = friendObject.closefriends.all()
+        #returnDict = json.dumps(friendList)
+        #return Response(returnDict)
+        if friendObject.closefriends.filter(id = self.request.user.id).exists():
+            posts = (Post.objects.filter(profile__user__username=friendname).exclude(privacy='p'))
+        elif friendObject.friends.filter(id = self.request.user.id).exists():
+            posts = (Post.objects.filter(profile__user__username=friendname).exclude(privacy='p').exclude(privacy='c'))
+        else:
+            testDict = {'1': "Not currently friends with user"}
+            returnDict = json.dumps(testDict)
+            return Response(returnDict)
+        serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
 class OceanPostViewSet(viewsets.ModelViewSet):

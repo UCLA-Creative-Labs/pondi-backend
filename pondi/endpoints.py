@@ -4,7 +4,7 @@ from rest_framework import routers
 
 from .api import (RegistrationAPI, LoginAPI, UserAPI, ProfilePostViewSet, ProfileAPI,
                   UpdateProfileAPI, AcceptFriendRequest, AcceptCloseFriendRequest,
-                  SendFriendRequest, SearchFriend, FriendPostsViewSet, OceanPostViewSet, PostUpdate)
+                  SendFriendRequest, SearchFriend, FriendPostsViewSet, OceanPostViewSet, PostUpdate, FriendProfileViewSet)
 
 
 
@@ -27,6 +27,7 @@ urlpatterns = [
     url("^auth/searchfriend/$", SearchFriend.as_view()),
     url("^auth/friendposts/$", FriendPostsViewSet.as_view({'get' : 'retrieve'})),
     url("^auth/myposts/$", ProfilePostViewSet.as_view({'get': 'retrieve', 'post':'create', 'patch': 'update'})),
+    url("^auth/friendprofile/$", FriendProfileViewSet.as_view({'get': 'retrieve'})),
     url("^auth/oceanposts/$", OceanPostViewSet.as_view({'get': 'retrieve'})),
     url("^prompts/$", include(router.urls)),
 
