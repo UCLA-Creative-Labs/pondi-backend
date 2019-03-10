@@ -37,14 +37,14 @@ ALLOWED_HOSTS = ['ff379468.ngrok.io', 'localhost',
                 '127.0.0.1', 'pondi.herokuapp.com']
 
 
-#CORS_ORIGIN_ALLOW_ALL = True
+
 
 # Application definition
 
 INSTALLED_APPS = [
     'rest_framework',
     'knox',
- #   'corsheaders',
+    'corsheaders',
     'pondi.apps.PondiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,9 +59,9 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
-    #'corsheaders.middleware.CorsMiddleware',
-  #  'django.middleware.common.CommonMiddleware',
-    'pondiBackend.middlewares.CorsMiddleWare',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+ #   'pondiBackend.middlewares.CorsMiddleWare',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -71,6 +71,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'localhost:3000',
+)
+CORS_ORIGIN_REGEX_WHITELIST = (
+    'localhost:3000',
+)
 ROOT_URLCONF = 'pondiBackend.urls'
 
 TEMPLATES = [
