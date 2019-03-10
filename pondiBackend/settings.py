@@ -37,7 +37,12 @@ ALLOWED_HOSTS = ['ff379468.ngrok.io', 'localhost',
                 '127.0.0.1', 'pondi.herokuapp.com']
 
 
-
+CORS_ORIGIN_ALLOW_ALL=True
+CORS_ORIGIN_WHITELIST = ('*',
+    'google.com',
+    'hostname.example.com',
+    'localhost:8000',
+    '127.0.0.1:9000')
 
 # Application definition
 
@@ -72,9 +77,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'pondiBackend.urls'
-CORS_ORIGIN_ALLOW_ALL=True
-CORS_ORIGIN_WHITELIST = ('*')
-CORS_ALLOW_CREDENTIALS = False
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
