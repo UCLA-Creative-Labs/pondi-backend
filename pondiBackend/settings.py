@@ -61,6 +61,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'pondiBackend.middlewares.CorsFix',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,7 +74,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'pondiBackend.urls'
 CORS_ORIGIN_ALLOW_ALL=True
 CORS_ORIGIN_WHITELIST = ('*')
-
+CORS_ALLOW_CREDENTIALS = False
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
