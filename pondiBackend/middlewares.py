@@ -1,4 +1,7 @@
 class CorsFix(object):
+    def process_response(self, req, resp):
+        response["Access-Control-Allow-Origin"] = "*"
+        return response
     def __init__(self, get_response):
         self.get_response = get_response
 
