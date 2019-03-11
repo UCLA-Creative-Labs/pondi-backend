@@ -36,7 +36,7 @@ class LoginAPI(generics.GenericAPIView):
 
 
 class UserAPI(generics.RetrieveAPIView):
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = UserSerializer
 
     def get_object(self):
@@ -59,7 +59,7 @@ class PromptViewSet(viewsets.ModelViewSet):
 
 #The API is pretty staight-forward, we validate the user input and create an account if the validation passes. In the response, we return the user object in serialized format and an authentication token which will be used by the application to perform user-specific api calls.
 class ProfilePostViewSet(viewsets.ModelViewSet):
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     queryset = (Post.objects.all())
     serializer_class = MyPostSerializer
 
@@ -70,7 +70,7 @@ class ProfilePostViewSet(viewsets.ModelViewSet):
 
 
 class FriendProfileViewSet(viewsets.ModelViewSet): #Need to work on this
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = MyPostSerializer
 
 
@@ -95,7 +95,7 @@ class FriendProfileViewSet(viewsets.ModelViewSet): #Need to work on this
         return Response(serializer.data)
 
 class OceanPostViewSet(viewsets.ModelViewSet):
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = MyPostSerializer
 
 
@@ -111,7 +111,7 @@ class OceanPostViewSet(viewsets.ModelViewSet):
 
 
 class FriendPostsViewSet(viewsets.ModelViewSet):
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = PostSerializer
 
 
@@ -126,7 +126,7 @@ class FriendPostsViewSet(viewsets.ModelViewSet):
 
 
 class UpdateProfileAPI(generics.UpdateAPIView):
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ProfileSerializer
 
     def get_object(self):
@@ -152,7 +152,7 @@ class AcceptFriendRequest(generics.UpdateAPIView):
         return Response(serializer.data)
 
 class AcceptCloseFriendRequest(generics.UpdateAPIView):
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ProfileSerializer
 
     def get_object(self):
@@ -171,7 +171,7 @@ class AcceptCloseFriendRequest(generics.UpdateAPIView):
         return Response(serializer.data)
 
 class SendFriendRequest(APIView):
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ProfileSerializer
 
     def get_object(self):
@@ -190,7 +190,7 @@ class SendFriendRequest(APIView):
         return Response(returnDict)
 
 class SearchFriend(APIView):
-    permission_classes = [MyAuth, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ProfileSerializer
     def get(self, request, *args, **kwargs):
         tempData = request.body
