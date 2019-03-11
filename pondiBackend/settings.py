@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import dj_database_url
+from corsheaders.defaults import default_methods
 
 
 
@@ -75,9 +76,14 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
+    '*'
 )
 CORS_ORIGIN_REGEX_WHITELIST = (
     'localhost:3000',
+    '*'
+)
+CORS_ALLOW_METHODS = default_methods + (
+    'POKE',
 )
 ROOT_URLCONF = 'pondiBackend.urls'
 
