@@ -58,8 +58,8 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': [
-       # 'pondi.mypermissions.MyAuth',
-      #  'rest_framework.authentication.TokenAuthentication',
+        'pondi.mypermissions.MyAuth',
+        'rest_framework.authentication.TokenAuthentication',
     ],
 }
 
