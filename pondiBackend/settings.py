@@ -35,7 +35,7 @@ DEBUG = True
 
 
 ALLOWED_HOSTS = ['ff379468.ngrok.io', 'localhost',
-                '127.0.0.1', 'pondi.herokuapp.com']
+                '127.0.0.1', 'pondi.herokuapp.com', '*', 'localhost:3000']
 
 
 
@@ -76,15 +76,16 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
+    'localhost:3000',
     '*'
 )
 CORS_ORIGIN_REGEX_WHITELIST = (
-    'http://localhost:3000',
+    'localhost:3000',
     '*'
 )
 CORS_ALLOW_METHODS = default_methods + (
     'POKE',
+    'POST',
 )
 ROOT_URLCONF = 'pondiBackend.urls'
 
